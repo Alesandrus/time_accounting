@@ -19,6 +19,7 @@ public class WorkTimeService {
         if (!user.isOnWork()) {
             user.setWorkDayBegin(System.currentTimeMillis());
             user.setOnWork(true);
+            user.setDowntimeByDay(0L);
             usersRepository.save(user);
             return true;
         } else {
