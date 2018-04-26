@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Учет рабочего времени</title>
+</head>
+<body>
+    <h1 id="greeting"></h1>
+    <button onclick="come()">Пришел</button>
+    <button onclick="goAway()">Ушел</button>
+    <button onclick="goHome()">Отработал</button>
+    <p>
+        Статус - <span id="status"></span>
+    </p>
+    <p id="comeTime"></p>
+    <p id="downtime"></p>
+    <p id="worktime"></p>
+
+    <form method="get" action="/logout">
+        <input type="submit" value="Выйти из сессии">
+    </form>
+    <script type="text/javascript" src="/js/timer.js"></script>
+</body>
+</html>
