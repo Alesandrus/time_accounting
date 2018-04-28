@@ -8,11 +8,26 @@ import org.springframework.stereotype.Service;
 import ru.treejoy.domain.User;
 import ru.treejoy.repository.UsersRepository;
 
+/**
+ * Класс-сервис для установки различных данных о пользователе.
+ *
+ * @author Alexander Ivanov
+ * @version 1.0
+ * @since 28.04.2018
+ */
 @Service
 public class WorkTimeService {
+    /**
+     * Экземпляр UserRepository для работы с данными пользователями в БД.
+     */
     @Autowired
     private UsersRepository usersRepository;
 
+    /**
+     * Установка начала работы.
+     *
+     * @return true если если пользователь еще не на работе.
+     */
     public boolean beginingWork() {
         User user = usersRepository.findByLogin(getCurrentUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Login not found!"));
@@ -27,12 +42,22 @@ public class WorkTimeService {
         }
     }
 
+    /**
+     * Получить время начала работы.
+     *
+     * @return время начала работы.
+     */
     public long getBeginingWorkTime() {
         User user = usersRepository.findByLogin(getCurrentUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Login not found!"));
         return user.getWorkDayBegin();
     }
 
+    /**
+     * Установить время начала перерыва.
+     *
+     * @return true если пользователь на работе и не на перерыве.
+     */
     public boolean beginTimeBreak() {
         User user = usersRepository.findByLogin(getCurrentUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Login not found!"));
@@ -45,6 +70,11 @@ public class WorkTimeService {
         return isWork;
     }
 
+    /**
+     * Установливает статус окончания перерыва и увеличивает значение времени простоя.
+     *
+     * @return true если пользователь на работе и на перерыве.
+     */
     public boolean endTimeBreak() {
         User user = usersRepository.findByLogin(getCurrentUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Login not found!"));
@@ -59,17 +89,27 @@ public class WorkTimeService {
         return isBreak;
     }
 
+    /**
+     * Получает текущее время простоя.
+     *
+     * @return время простоя.
+     */
     public long getCurrentDownTime() {
         User user = usersRepository.findByLogin(getCurrentUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Login not found!"));
         return user.getDowntimeByDay();
     }
 
+    /**
+     * Устанавливает статус окончания работы.
+     *
+     * @return true если работа окончена.
+     */
     public boolean endWork() {
         User user = usersRepository.findByLogin(getCurrentUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Login not found!"));
         boolean isEnd = false;
-        if(user.isOnWork()) {
+        if (user.isOnWork()) {
             if (user.isOnBreak()) {
                 long timeBreak = System.currentTimeMillis() - user.getBeginTimeBreak();
                 long currentDowntime = user.getDowntimeByDay();
@@ -84,6 +124,11 @@ public class WorkTimeService {
         return isEnd;
     }
 
+    /**
+     * Получает время работы за день.
+     *
+     * @return время работы за день.
+     */
     public long getWorkTimeByDay() {
         User user = usersRepository.findByLogin(getCurrentUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Login not found!"));
@@ -96,17 +141,32 @@ public class WorkTimeService {
         return workTime;
     }
 
+    /**
+     * Получить логин текщего пользователя, находящегося в сессии.
+     *
+     * @return логин пользователя.
+     */
     public String getCurrentUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName();
     }
 
+    /**
+     * Нахождение пользователя на работе.
+     *
+     * @return true если пользователь на работе.
+     */
     public boolean isOnWork() {
         User user = usersRepository.findByLogin(getCurrentUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Login not found!"));
         return user.isOnWork();
     }
 
+    /**
+     * Нахождение пользователя на перерыве.
+     *
+     * @return true если пользователь на перерыве.
+     */
     public boolean isOnBreak() {
         User user = usersRepository.findByLogin(getCurrentUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Login not found!"));
